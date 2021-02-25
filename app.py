@@ -93,13 +93,15 @@ def temps():
 def start_temp(start):
     session = Session(engine)
     start = dt.datetime.strptime(start, "%Y-%m-%d")
+    
+    # Querying data for dates after start date
     min_temp = session.query(func.min(Measurement.tobs)).filter(Measurement.date >= start).all()
     max_temp = session.query(func.max(Measurement.tobs)).filter(Measurement.date >= start).all()
     avg_temp = session.query(func.avg(Measurement.tobs)).filter(Measurement.date >= start).all()
     session.close()
 
+    
     temp_calcs = []
-
     temp_dict = {}
     temp_dict["Min Temp"] = min_temp
     temp_dict["Max Temp"] = max_temp
@@ -109,18 +111,21 @@ def start_temp(start):
     return jsonify(temp_calcs)
 
 
-
 @app.route("/api/v1.0/<start>/<end>")
 def start_end_temp(start, end):
     session = Session(engine)
     start = dt.datetime.strptime(start, "%Y-%m-%d")
     end = dt.datetime.strptime(end, "%Y-%m-%d")
+    
+    # Querying dates between start and end and getting temp data
     min_temp = session.query(func.min(Measurement.tobs)).\
-        filter(Measurement.date.between(start, end)).all()
+        filter(Measurement.date >= start, Measurement.date <= end).all()
     max_temp = session.query(func.max(Measurement.tobs)).\
-        filter(Measurement.date.between(start, end)).all()
+        filter(Measurement.date >= start, Measurement.date <= end).all()
     avg_temp = session.query(func.avg(Measurement.tobs)).\
-        filter(Measurement.date.between(start, end)).all()
+        filter(Measurement.date >= start, Measurement.date <= end).all()
+    
+    session.close()
 
     start_end_temp_calcs = []
 
@@ -132,5 +137,6 @@ def start_end_temp(start, end):
 
     return jsonify(start_end_temp_calcs)
 
+# Running app
 if __name__ == "__main__":
     app.run(debug=True)
