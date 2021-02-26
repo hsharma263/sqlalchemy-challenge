@@ -1,1 +1,2 @@
 # sqlalchemy-challenge
+This challenge makes use of SQLAlchemy in order to analyze weather data and find the time to travel based on ideal conditions. Precipitation data is analyzed and in conjunction with Pandas, visualizations are created to better view the results. Furthermore, using SQLAlchemy, we are able to look at which stations have the most readings. Additionally, Flask is used in this challenge to create a Climate App, which enables you to look up certain information based on the dates. Lastly, the bonus activities dive deeper into visualizations and data analysis.
